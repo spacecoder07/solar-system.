@@ -1,15 +1,15 @@
 body {
-    display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 100vw;
     background:url(galaxy.jpg) no-repeat center/cover;
     overflow: hidden;
     margin: 0;
-    position: relative;
+    overflow:hidden;
 }
 
-body::before {
+/* body::before {
     content: "";
     position: absolute;
     width: 100%;
@@ -18,12 +18,15 @@ body::before {
     opacity: 0.6;
     z-index: -1;
     animation: twinkling 5s infinite alternate;
-}
+} */
 
 .solar-system {
-    position: relative;
+    position: absolute;
     width: 800px;
     height: 800px;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
 }
 
 .sun {
@@ -479,3 +482,14 @@ body{
     background: url("galaxy.jpg");
     animation: moveStars 50s linear infinite;
 }
+@media (max-width:768px){
+    .solar-system{
+        width:400px;
+        height:400px;
+    }
+    .sun{
+        width:60px;
+        height:60px;
+    }
+}
+
