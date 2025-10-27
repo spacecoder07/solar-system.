@@ -60,28 +60,28 @@ body {
 }
 
 .mercury {
-    width: 250px;
-    height: 250px;
+    width: 750px;
+    height: 750px;
     animation-duration: 12s;
 }
 
 .mercury-planet {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     background: url(mercury.jpg) no-repeat center/cover;
     animation: rotate-planet 10s linear infinite;
     margin: 10px;
 }
 
 .venus {
-    width: 410px;
-    height: 410px;
+    width: 900px;
+    height: 900px;
     animation-duration: 30.4s;
 }
 
 .venus-planet {
-    width: 55px;
-    height: 55px;
+    width: 56px;
+    height: 56px;
     background: url(venus.jpg) no-repeat center/cover;
     animation: rotate-planet 15s linear infinite;
 }
@@ -492,6 +492,7 @@ body{
         height:60px;
     }
 }
+
 
 
 
