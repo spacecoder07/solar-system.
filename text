@@ -1,0 +1,654 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const planets = document.querySelectorAll(".planet");
+
+    planets.forEach(planet => {
+        let speed = parseFloat(getComputedStyle(planet).animationDuration); // Extract number
+        if (!isNaN(speed)) {
+            let newSpeed = speed / 1.5; // Adjust speed dynamically
+            planet.style.animationDuration = newSpeed + "s";
+        }
+    });
+});
+
+document.getElementById("speed").addEventListener("input", (event) => {
+    let speedMultiplier = event.target.value;
+    document.querySelectorAll(".planet").forEach(planet => {
+        let originalSpeed = parseFloat(planet.dataset.originalSpeed) || parseFloat(getComputedStyle(planet).animationDuration);
+        planet.dataset.originalSpeed = originalSpeed; // Store original speed
+        planet.style.animationDuration = (originalSpeed / speedMultiplier) + "s";
+    });
+});
+
+// Add a group for the Solar Storm
+const solarStormGroup = new THREE.Group();
+scene.add(solarStormGroup);
+
+// Create Solar Storm particles
+const createSolarStormParticle = (position) => {
+    const geometry = new THREE.SphereGeometry(0.1, 8, 8); // Small particle size
+    const material = new THREE.MeshBasicMaterial({ color: 0xff4500 }); // Orange color for storm
+    const particle = new THREE.Mesh(geometry, material);
+    particle.position.set(position.x, position.y, position.z);
+    solarStormGroup.add(particle);
+    return particle;
+};
+
+// Create a Solar Storm that moves towards the planets
+const moveSolarStorm = () => {
+    solarStormGroup.children.forEach(particle => {
+        // Move the particles in a straight line towards the planets
+        const direction = new THREE.Vector3(
+            (Math.random() - 0.5) * 0.2,  // Random direction on x-axis
+            (Math.random() - 0.5) * 0.2,  // Random direction on y-axis
+            (Math.random() - 0.5) * 0.2   // Random direction on z-axis
+        );
+        particle.position.add(direction); // Move particles
+    });
+};
+
+// Function to create a Solar Storm in random locations around the Sun
+const createSolarStorm = () => {
+    // Create 100 particles randomly distributed around the Sun
+    for (let i = 0; i < 100; i++) {
+        const x = Math.random() * 6 - 3; // Random X position near the Sun
+        const y = Math.random() * 6 - 3; // Random Y position near the Sun
+        const z = Math.random() * 6 - 3; // Random Z position near the Sun
+        createSolarStormParticle(new THREE.Vector3(x, y, z));
+    }
+};
+
+// Remove particles when they move too far away
+const cleanSolarStorm = () => {
+    solarStormGroup.children.forEach(particle => {
+        if (particle.position.length() > 20) { // If the particle is too far, remove it
+            solarStormGroup.remove(particle);
+        }
+    });
+};
+
+// Trigger Solar Storm creation (called when you want to start the storm)
+createSolarStorm();
+
+// Function to update Solar Storm in the animation loop
+const updateSolarStorm = () => {
+    moveSolarStorm();
+    cleanSolarStorm();
+};
+
+// In your animation loop, add:
+function animate() {
+    requestAnimationFrame(animate);
+    
+    // Update Solar Storm
+    updateSolarStorm();
+    
+    // Render the scene
+    renderer.render(scene, camera);
+}
+
+animate();
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+</head>
+
+<body>
+    <div class="solar-system">
+        <div class="sun"></div>
+        <div class="orbit mercury">
+            <div class="planet mercury-planet">
+                <div class="moon mercury-moon"></div>
+            </div>
+        </div>
+        <div class="orbit venus">
+            <div class="planet venus-planet">
+                <div class="moon venus-moon"></div>
+            </div>
+        </div>
+        <div class="orbit earth">
+            <div class="planet earth-planet">
+                <div class="moon earth-moon"></div>
+            </div>
+        </div>
+        <div class="orbit mars">
+            <div class="planet mars-planet">
+                <div class="moon mars-moon1"></div>
+                <div class="moon mars-moon2"></div>
+            </div>
+        </div>
+        <div class="orbit jupiter">
+            <div class="planet jupiter-planet">
+                <div class="moon jupiter-moon1"></div>
+                <div class="moon jupiter-moon2"></div>
+                <div class="moon jupiter-moon3"></div>
+            </div>
+        </div>
+        <div class="orbit saturn">
+            <div class="planet saturn-planet">
+                <div class="ring ring1"></div>
+                <div class="ring ring2"></div>
+                <div class="ring ring3"></div>
+                <div class="ring ring4"></div>
+                <div class="ring ring5"></div>
+                <div class="ring ring6"></div>
+                <div class="ring ring7"></div>
+            </div>
+            <div class="moon saturn-moon1"></div>
+            <div class="moon saturn-moon3"></div>
+        </div>
+        <div class="orbit uranus">
+            <div class="planet uranus-planet">
+                <div class="ring ring1"></div>
+                <div class="ring ring2"></div>
+                <div class="ring ring3"></div>
+                <div class="ring ring4"></div>
+                <div class="ring ring5"></div>
+                <div class="ring ring6"></div>
+                <div class="ring ring7"></div>
+            </div>
+            <div class="moon uranus-moon1"></div>
+        </div>
+        <div class="orbit neptune">
+            <div class="planet neptune-planet">
+                <div class="moon neptune-moon1"></div>
+            </div>
+        </div>
+        <div class="controls">
+            <label for="speed">Speed:</label>
+            <input type="range" id="speed" min="0.1" max="2" step="0.1" value="1">
+        </div>
+    </div>
+    <script src="script.js">
+    </script>
+</body>
+
+</html>
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background:url(galaxy.jpg) no-repeat center/cover;
+    overflow: hidden;
+    margin: 0;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 0.6;
+    z-index: -1;
+    animation: twinkling 5s infinite alternate;
+}
+
+.solar-system {
+    position: relative;
+    width: 800px;
+    height: 800px;
+}
+
+.sun {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: url(sun.png)no-repeat center/cover;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 20px 20px 100px rgba(255, 255, 0, 0.8),
+        -20px -20px 100px rgba(255, 255, 0, 0.8);
+    animation: rotate-sun 25s linear infinite;
+}
+
+.orbit {
+    position: absolute;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: orbit linear infinite;
+}
+
+.planet {
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    animation: rotate-planet 24s linear infinite;
+
+}
+
+.mercury {
+    width: 250px;
+    height: 250px;
+    animation-duration: 61s;
+}
+
+.mercury-planet {
+    width: 30px;
+    height: 30px;
+    background: url(mercury.jpg) no-repeat center/cover;
+    animation: rotate-planet 10s linear infinite;
+    margin: 10px;
+}
+
+.venus {
+    width: 410px;
+    height: 410px;
+    animation-duration: 58s;
+}
+
+.venus-planet {
+    width: 35px;
+    height: 35px;
+    background: url(venus.jpg) no-repeat center/cover;
+    animation: rotate-planet 15s linear infinite;
+}
+
+.earth {
+    width: 550px;
+    height: 550px;
+    animation-duration: 48s;
+    
+}
+
+.earth-planet {
+    width: 40px;
+    height: 40px;
+    background: url(earth.jpg)no-repeat center/cover;
+    animation: rotate-planet 20s linear infinite;
+}
+
+.mars {
+    width: 710px;
+    height: 710px;
+    animation-duration: 53s;
+}
+
+.mars-planet {
+    width: 33px;
+    height: 33px;
+    background: url(mars.jpg) no-repeat center/cover;
+    animation: rotate-planet 25s linear infinite;
+}
+
+.jupiter {
+    width: 850px;
+    height: 850px;
+    animation-duration: 38s;
+}
+
+.jupiter-planet {
+    width: 62px;
+    height: 62px;
+    background: url(jupitar.jpg) no-repeat center/cover;
+    animation: rotate-planet 35s linear infinite;
+}
+
+.saturn {
+    width: 1050px;
+    height: 1050px;
+    animation-duration: 42s;
+}
+
+.saturn-planet {
+    width: 53px;
+    height: 53px;
+    background: url(saturn.jpg) no-repeat center/cover;
+    animation: rotate-planet 40s linear infinite;
+}
+
+.saturn-ring {
+    width: 53px;
+    height: 53px;
+}
+
+.uranus {
+    width: 1350px;
+    height: 1350px;
+    animation-duration: 40s;
+}
+
+.uranus-planet {
+    width: 50px;
+    height: 50px;
+    background: url(uranus.jpg) no-repeat center/cover;
+    animation: rotate-planet 45s linear infinite;
+}
+
+.neptune {
+    width: 1500px;
+    height: 1500px;
+    animation-duration: 44s;
+}
+
+.neptune-planet {
+    width: 45px;
+    height: 45px;
+    background: url(neptune.jpg) no-repeat center/cover;
+    animation: rotate-planet 50s linear infinite;
+}
+
+.ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    /* White faded rings */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateX(75deg);
+}
+
+.ring1 {
+    width: 70px;
+    height: 30px;
+    border-width: 3px;
+    opacity: 0.9;
+}
+
+.ring2 {
+    width: 80px;
+    height: 34px;
+    border-width: 2.5px;
+    opacity: 0.8;
+}
+
+.ring3 {
+    width: 90px;
+    height: 38px;
+    border-width: 2px;
+    opacity: 0.7;
+}
+
+.ring4 {
+    width: 100px;
+    height: 42px;
+    border-width: 1.8px;
+    opacity: 0.6;
+}
+
+.ring5 {
+    width: 110px;
+    height: 46px;
+    border-width: 1.5px;
+    opacity: 0.5;
+}
+
+.ring6 {
+    width: 120px;
+    height: 50px;
+    border-width: 1.3px;
+    opacity: 0.4;
+}
+
+.ring7 {
+    width: 130px;
+    height: 54px;
+    border-width: 1px;
+    opacity: 0.3;
+}
+
+.uranus .ring {
+    position: absolute;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateX(75deg);
+}
+
+/* Dark gray, reddish, and faint rings for Uranus */
+.uranus .ring1 {
+    width: 75px;
+    height: 35px;
+    border-width: 3px;
+    border-color: rgba(105, 105, 105, 0.8); /* Dark gray with some opacity */
+    opacity: 0.9;
+}
+
+.uranus .ring2 {
+    width: 85px;
+    height: 39px;
+    border-width: 2.5px;
+    border-color: rgba(139, 69, 19, 0.8); /* Reddish color with some opacity */
+    opacity: 0.8;
+}
+
+.uranus .ring3 {
+    width: 95px;
+    height: 43px;
+    border-width: 2px;
+    border-color: rgba(169, 169, 169, 0.7); /* Light gray with a hint of opacity */
+    opacity: 0.7;
+}
+
+.uranus .ring4 {
+    width: 105px;
+    height: 47px;
+    border-width: 1.8px;
+    border-color: rgba(128, 128, 128, 0.6); /* Slightly darker gray */
+    opacity: 0.6;
+}
+
+.uranus .ring5 {
+    width: 115px;
+    height: 51px;
+    border-width: 1.5px;
+    border-color: rgba(139, 0, 0, 0.5); /* Faint reddish */
+    opacity: 0.5;
+}
+
+.uranus .ring6 {
+    width: 125px;
+    height: 55px;
+    border-width: 1.3px;
+    border-color: rgba(169, 169, 169, 0.4); /* Light gray */
+    opacity: 0.4;
+}
+
+.uranus .ring7 {
+    width: 135px;
+    height: 59px;
+    border-width: 1px;
+    border-color: rgba(105, 105, 105, 0.3); /* Dark gray with very faint opacity */
+    opacity: 0.3;
+}
+
+/* Default moon style */
+.moon {
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    margin: 11px;
+    gap:10px;
+}
+
+.mercury-moon {
+    width: 8px;
+    height: 8px;
+    top: 20px;
+    left: 20px;
+    background-color: #D3D3D3; /* Light gray moon color */
+    animation: orbit-moon 15s linear infinite;
+}
+.venus-moon{
+    width: 10px;
+    height: 10px;
+    background-color: #a9a9a9;
+    top: 24px;
+    left: 24px;
+    animation: orbit-moon 8s linear infinite;
+}
+.earth-moon{
+    width: 12px;
+    height: 12px;
+    background-color: #e0e0e0;
+    top: 28px;
+    left: 28px;
+    animation: orbit-moon 8s linear infinite;
+}
+.mars-moon1{
+    width: 9px;
+    height: 9px;
+    background-color: #b7410e;
+    top: 21px;
+    left: 21px;
+    margin:10px;
+    margin-left: -30px;
+    animation: orbit-moon 12s linear infinite;
+}
+.mars-moon2{
+    width: 7px;
+    height: 7px;
+    background-color: #b7410e;
+    top: 30px;
+    left: 30px;
+    animation: orbit-moon 14s linear infinite;
+}
+.jupiter-moon1{
+    width: 15px;
+    height: 15px;
+    background-color: #a9a9a9;
+    top: 50px;
+    left: 50px;
+    animation: orbit-moon 8s linear infinite;
+}
+
+.jupiter-moon2{
+    width: 13px;
+    height: 13px;
+    background-color:#808080;
+    top: 60px;
+    left: 60px;
+    animation: orbit-moon 12s linear infinite;
+    margin-left: -40px;
+}
+.jupiter-moon3{
+    width: 11px;
+    height: 11px;
+    background-color: #b0b0b0;
+    top: 50px;
+    left: 50px;
+    animation: orbit-moon 18s linear infinite;
+    margin-left: -80px;
+}
+.saturn-moon1{
+    width: 14px;
+    height: 14px;
+    background-color: #d3d3d3;
+    top: 39px;
+    left: 39px;
+    animation: orbit-moon 8s linear infinite;
+}
+
+.saturn-moon3{
+    width: 10px;
+    height: 10px;
+    background-color: #808080;
+    top: 45px;
+    left: 45px;
+    animation: orbit-moon 18s linear infinite;
+    margin-left: -40px;
+}
+.uranus-moon1{
+    width: 8px;
+    height: 8px;
+    background-color: #b0e0e6;
+    top: 60px;
+    left: 60px;
+    margin-left: -39px;
+    animation: orbit-moon 30s linear infinite;
+}
+.neptune-moon1{
+    width: 9px;
+    height: 9px;
+    background-color:#4682b4;
+    top: 50px;
+    left: 50px;
+    animation: orbit-moon 32s linear infinite;
+}
+.controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+}
+
+
+
+
+/* Moons Orbit Animation */
+@keyframes orbit-moon {
+    from {
+        transform: rotate(0deg) translateX(50%) rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg) translateX(50%) rotate(-360deg);
+    }
+}
+
+@keyframes orbit {
+    from {
+        transform: rotate(0deg) translateX(50%) rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg) translateX(50%) rotate(-360deg);
+    }
+}
+
+@keyframes rotate-sun {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotate-planet {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes twinkling {
+    from {
+        opacity: 0.5;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes moveStars {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -1000px 1000px;
+    }
+}
+body{
+    background: url("galaxy.jpg");
+    animation: moveStars 50s linear infinite;
+}
