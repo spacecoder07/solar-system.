@@ -31,8 +31,8 @@ body {
 
 .sun {
     position: absolute;
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     background: url(sun.png)no-repeat center/cover;
     border-radius: 50%;
     top: 50%;
@@ -66,8 +66,8 @@ body {
 }
 
 .mercury-planet {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     background: url(mercury.jpg) no-repeat center/cover;
     animation: rotate-planet 10s linear infinite;
     margin: 10px;
@@ -80,8 +80,8 @@ body {
 }
 
 .venus-planet {
-    width: 35px;
-    height: 35px;
+    width: 55px;
+    height: 55px;
     background: url(venus.jpg) no-repeat center/cover;
     animation: rotate-planet 15s linear infinite;
 }
@@ -94,8 +94,8 @@ body {
 }
 
 .earth-planet {
-    width: 40px;
-    height: 40px;
+    width: 66px;
+    height: 66px;
     background: url(earth.jpg)no-repeat center/cover;
     animation: rotate-planet 20s linear infinite;
 }
@@ -107,8 +107,8 @@ body {
 }
 
 .mars-planet {
-    width: 33px;
-    height: 33px;
+    width: 46px;
+    height: 46px;
     background: url(mars.jpg) no-repeat center/cover;
     animation: rotate-planet 25s linear infinite;
 }
@@ -120,8 +120,8 @@ body {
 }
 
 .jupiter-planet {
-    width: 62px;
-    height: 62px;
+    width: 120px;
+    height: 120px;
     background: url(jupitar.jpg) no-repeat center/cover;
     animation: rotate-planet 35s linear infinite;
 }
@@ -140,8 +140,8 @@ body {
 }
 
 .saturn-ring {
-    width: 53px;
-    height: 53px;
+    width: 105px;
+    height: 105px;
 }
 
 .uranus {
@@ -151,8 +151,8 @@ body {
 }
 
 .uranus-planet {
-    width: 50px;
-    height: 50px;
+    width: 90px;
+    height: 90px;
     background: url(uranus.jpg) no-repeat center/cover;
     animation: rotate-planet 45s linear infinite;
 }
@@ -164,8 +164,8 @@ body {
 }
 
 .neptune-planet {
-    width: 45px;
-    height: 45px;
+    width: 77px;
+    height: 77px;
     background: url(neptune.jpg) no-repeat center/cover;
     animation: rotate-planet 50s linear infinite;
 }
@@ -492,4 +492,5 @@ body{
         height:60px;
     }
 }
+
 
